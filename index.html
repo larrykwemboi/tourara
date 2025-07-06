@@ -1,170 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Find a Hotel</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Uganda Hotels</title>
   <style>
-  body {
-    font-family: 'Segoe UI', sans-serif;
-    margin: 0;
-    padding: 20px;
-    background: #f4f6f8;
-  }
-
-  h1 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-
-  .search-box {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 30px;
-  }
-
-  input, button {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 16px;
-    min-width: 150px;
-    flex: 1;
-  }
-
-  button {
-    background: #2c7be5;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-
-  .results {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-  }
-
-  .card {
-    background: white;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    display: flex;
-    flex-direction: column;
-  }
-
-  .card img {
-    width: 100%;
-    border-radius: 8px;
-    height: 180px;
-    object-fit: cover;
-  }
-
-  .card h3 {
-    margin: 10px 0 5px;
-  }
-
-  .card p {
-    margin: 4px 0;
-    font-size: 14px;
-  }
-
-  .card button {
-    margin-top: 10px;
-    margin-right: 8px;
-  }
-
-  @media (max-width: 480px) {
-    .search-box {
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f5f5f5;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .hotel-card {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      display: flex;
       flex-direction: column;
-      align-items: stretch;
+      max-width: 500px;
+      margin: 0 auto 20px auto;
     }
-
-    input, button {
+    .hotel-card img {
       width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
     }
-  }
-</style>
-
+    .hotel-info {
+      padding: 10px 0;
+    }
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+    }
+    .buttons a {
+      padding: 8px 12px;
+      background: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+    @media (max-width: 600px) {
+      .hotel-card {
+        margin: 10px;
+      }
+    }
+  </style>
 </head>
 <body>
-
-  <h1>Find a Hotel</h1>
-
-  <div class="search-box">
-    <input type="text" id="location" placeholder="Enter location...">
-    <input type="number" id="minPrice" placeholder="Min Price">
-    <input type="number" id="maxPrice" placeholder="Max Price">
-    <button onclick="searchHotels()">Search</button>
-  </div>
-
-  <div class="results" id="results"></div>
+  <h1>Hotels in Uganda</h1>
+  <div id="hotel-list"></div>
 
   <script>
-    const hotels = [
-      {
-        id: 1,
-        name: "Sunset View Lodge",
-        location: "Kampala",
-        price: 50000,
-        rating: 4.5,
-        image: "https://source.unsplash.com/400x300/?hotel,room",
-      },
-      {
-        id: 2,
-        name: "Mountain Top Inn",
-        location: "Mbale",
-        price: 35000,
-        rating: 4.1,
-        image: "https://source.unsplash.com/400x300/?resort,bedroom",
-      },
-      {
-        id: 3,
-        name: "Kapchorwa Paradise",
-        location: "Kapchorwa",
-        price: 45000,
-        rating: 4.7,
-        image: "https://source.unsplash.com/400x300/?nature,hotel",
-      }
-    ];
+    async function loadCSV() {
+      const response = await fetch("uganda_hotels_sample.csv"); // Path relative to your GitHub repo
+      const data = await response.text();
+      const rows = data.split("\n").slice(1);
+      const hotels = rows.map(row => {
+        const cols = row.split(",");
+        return {
+          name: cols[0],
+          address: cols[1],
+          rating: cols[2],
+          priceLevel: cols[3],
+          phone: cols[4],
+          website: cols[5],
+          image: cols[6]
+        };
+      });
 
-    function searchHotels() {
-      const loc = document.getElementById('location').value.toLowerCase();
-      const min = parseInt(document.getElementById('minPrice').value) || 0;
-      const max = parseInt(document.getElementById('maxPrice').value) || 999999;
-
-      const filtered = hotels.filter(hotel =>
-        hotel.location.toLowerCase().includes(loc) &&
-        hotel.price >= min && hotel.price <= max
-      );
-
-      const resultsDiv = document.getElementById('results');
-      resultsDiv.innerHTML = '';
-
-      filtered.forEach(hotel => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <img src="${hotel.image}" alt="${hotel.name}">
-          <h3>${hotel.name}</h3>
-          <p>📍 ${hotel.location}</p>
-          <p>💰 UGX ${hotel.price}</p>
-          <p>⭐ ${hotel.rating}</p>
-          <button onclick="window.location.href='details.html?id=${hotel.id}'">View More</button>
-          <button onclick="bookHotel('${hotel.name}', '${hotel.location}', ${hotel.price})">Book</button>
+      const container = document.getElementById("hotel-list");
+      hotels.forEach(hotel => {
+        if (!hotel.name) return;
+        container.innerHTML += `
+          <div class="hotel-card">
+            <img src="${hotel.image}" alt="${hotel.name}" />
+            <div class="hotel-info">
+              <h3>${hotel.name}</h3>
+              <p>📍 ${hotel.address}</p>
+              <p>⭐ ${hotel.rating || 'No rating'} | 💰 ${hotel.priceLevel || 'N/A'}</p>
+            </div>
+            <div class="buttons">
+              <a href="${hotel.website}" target="_blank">View More</a>
+              <a href="mailto:kwemboi59@gmail.com?subject=Booking%20Inquiry%20for%20${encodeURIComponent(hotel.name)}">Book</a>
+            </div>
+          </div>
         `;
-        resultsDiv.appendChild(card);
       });
     }
 
-    function bookHotel(name, location, price) {
-      const subject = encodeURIComponent(`Booking Inquiry: ${name}`);
-      const body = encodeURIComponent(`Hello Larry,\n\nI would like to book:\n\nHotel: ${name}\nLocation: ${location}\nPrice: UGX ${price}\n\nPlease send payment details.\n\nThank you!`);
-      window.location.href = `mailto:kwemboi59@gmail.com?subject=${subject}&body=${body}`;
-    }
+    loadCSV();
   </script>
-
 </body>
 </html>
