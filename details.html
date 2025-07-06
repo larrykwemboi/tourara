@@ -1,105 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Hotel Details</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Uganda Hotels</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 20px;
-      background: #f9fafc;
+      margin: 20px;
+      background: #f5f5f5;
     }
-    .container {
-      max-width: 700px;
-      margin: auto;
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .hotel-card {
       background: white;
-      padding: 20px;
+      padding: 15px;
       border-radius: 10px;
+      margin-bottom: 20px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      max-width: 500px;
+      margin: 0 auto 20px auto;
     }
-    img {
+    .hotel-card img {
       width: 100%;
-      border-radius: 10px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
     }
-    h2 {
-      margin-top: 15px;
+    .hotel-info {
+      padding: 10px 0;
     }
-    ul {
-      padding-left: 20px;
+    .buttons {
+      display: flex;
+      justify-content: space-between;
     }
-    button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      background: #28a745;
+    .buttons a {
+      padding: 8px 12px;
+      background: #007bff;
       color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      cursor: pointer;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+    @media (max-width: 600px) {
+      .hotel-card {
+        margin: 10px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container" id="hotelDetails">
-    Loading...
-  </div>
+  <h1>Hotels in Uganda</h1>
+  <div id="hotel-list"></div>
 
   <script>
     const hotels = [
       {
-        id: 1,
-        name: "Sunset View Lodge",
-        location: "Kampala",
-        price: 50000,
-        rating: 4.5,
-        image: "https://source.unsplash.com/700x400/?hotel,room",
-        amenities: ["Free WiFi", "Breakfast Included", "Parking", "Air Conditioning"]
+        name: "Hotel Africana",
+        address: "Kampala",
+        rating: "4.2",
+        priceLevel: "2",
+        phone: "+256701234567",
+        website: "https://www.hotelafricana.co.ug",
+        image: "https://source.unsplash.com/400x300/?hotel"
       },
       {
-        id: 2,
-        name: "Mountain Top Inn",
-        location: "Mbale",
-        price: 35000,
-        rating: 4.1,
-        image: "https://source.unsplash.com/700x400/?resort,bedroom",
-        amenities: ["Restaurant", "24h Service", "Mountain View", "TV"]
+        name: "Speke Hotel",
+        address: "Kampala",
+        rating: "4.5",
+        priceLevel: "3",
+        phone: "+256752345678",
+        website: "https://www.spekehotel.com",
+        image: "https://source.unsplash.com/400x300/?luxury-hotel"
       },
       {
-        id: 3,
-        name: "Kapchorwa Paradise",
-        location: "Kapchorwa",
-        price: 45000,
-        rating: 4.7,
-        image: "https://source.unsplash.com/700x400/?nature,hotel",
-        amenities: ["Nature Trails", "Hot Water", "Lounge", "Private Balcony"]
+        name: "Protea Hotel Entebbe",
+        address: "Entebbe",
+        rating: "4.1",
+        priceLevel: "2",
+        phone: "+256753456789",
+        website: "https://proteahotels.com",
+        image: "https://source.unsplash.com/400x300/?resort"
+      },
+      {
+        name: "Grand Imperial Hotel",
+        address: "Kampala",
+        rating: "4.0",
+        priceLevel: "2",
+        phone: "+256754567890",
+        website: "https://grandimperialhotel.com",
+        image: "https://source.unsplash.com/400x300/?historic-hotel"
+      },
+      {
+        name: "Jinja Nile Resort",
+        address: "Jinja",
+        rating: "4.3",
+        priceLevel: "2",
+        phone: "+256755678901",
+        website: "https://nileresort.com",
+        image: "https://source.unsplash.com/400x300/?river-resort"
+      },
+      {
+        name: "The Pearl of Africa Hotel",
+        address: "Entebbe",
+        rating: "4.4",
+        priceLevel: "3",
+        phone: "+256756789012",
+        website: "https://pearlofafricahotel.com",
+        image: "https://source.unsplash.com/400x300/?modern-hotel"
       }
     ];
 
-    const params = new URLSearchParams(window.location.search);
-    const id = parseInt(params.get('id'));
-    const hotel = hotels.find(h => h.id === id);
+    const container = document.getElementById("hotel-list");
 
-    const container = document.getElementById('hotelDetails');
-    if (hotel) {
-      container.innerHTML = `
-        <img src="${hotel.image}" alt="${hotel.name}">
-        <h2>${hotel.name}</h2>
-        <p><strong>Location:</strong> ${hotel.location}</p>
-        <p><strong>Price:</strong> UGX ${hotel.price}</p>
-        <p><strong>Rating:</strong> ${hotel.rating}</p>
-        <p><strong>Amenities:</strong></p>
-        <ul>${hotel.amenities.map(a => `<li>${a}</li>`).join('')}</ul>
-        <button onclick="bookHotel('${hotel.name}', '${hotel.location}', ${hotel.price})">Book</button>
+    hotels.forEach(hotel => {
+      container.innerHTML += `
+        <div class="hotel-card">
+          <img src="${hotel.image}" alt="${hotel.name}" />
+          <div class="hotel-info">
+            <h3>${hotel.name}</h3>
+            <p>📍 ${hotel.address}</p>
+            <p>⭐ ${hotel.rating} | 💰 ${hotel.priceLevel}</p>
+          </div>
+          <div class="buttons">
+            <a href="${hotel.website}" target="_blank">View More</a>
+            <a href="mailto:kwemboi59@gmail.com?subject=Booking%20Inquiry%20for%20${encodeURIComponent(hotel.name)}">Book</a>
+          </div>
+        </div>
       `;
-    } else {
-      container.innerHTML = `<p>Hotel not found.</p>`;
-    }
-
-    function bookHotel(name, location, price) {
-      const subject = encodeURIComponent(`Booking Inquiry: ${name}`);
-      const body = encodeURIComponent(`Hello Larry,\n\nI would like to book:\n\nHotel: ${name}\nLocation: ${location}\nPrice: UGX ${price}\n\nPlease send payment details.\n\nThank you!`);
-      window.location.href = `mailto:kwemboi59@gmail.com?subject=${subject}&body=${body}`;
-    }
+    });
   </script>
 </body>
 </html>
