@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Uganda Hotels</title>
   <style>
     body {
@@ -57,44 +57,81 @@
   <div id="hotel-list"></div>
 
   <script>
-    async function loadCSV() {
-      const response = await fetch("uganda_hotels_sample.csv"); // Path relative to your GitHub repo
-      const data = await response.text();
-      const rows = data.split("\n").slice(1);
-      const hotels = rows.map(row => {
-        const cols = row.split(",");
-        return {
-          name: cols[0],
-          address: cols[1],
-          rating: cols[2],
-          priceLevel: cols[3],
-          phone: cols[4],
-          website: cols[5],
-          image: cols[6]
-        };
-      });
+    const hotels = [
+      {
+        name: "Hotel Africana",
+        address: "Kampala",
+        rating: "4.2",
+        priceLevel: "2",
+        phone: "+256701234567",
+        website: "https://www.hotelafricana.co.ug",
+        image: "https://source.unsplash.com/400x300/?hotel"
+      },
+      {
+        name: "Speke Hotel",
+        address: "Kampala",
+        rating: "4.5",
+        priceLevel: "3",
+        phone: "+256752345678",
+        website: "https://www.spekehotel.com",
+        image: "https://source.unsplash.com/400x300/?luxury-hotel"
+      },
+      {
+        name: "Protea Hotel Entebbe",
+        address: "Entebbe",
+        rating: "4.1",
+        priceLevel: "2",
+        phone: "+256753456789",
+        website: "https://proteahotels.com",
+        image: "https://source.unsplash.com/400x300/?resort"
+      },
+      {
+        name: "Grand Imperial Hotel",
+        address: "Kampala",
+        rating: "4.0",
+        priceLevel: "2",
+        phone: "+256754567890",
+        website: "https://grandimperialhotel.com",
+        image: "https://source.unsplash.com/400x300/?historic-hotel"
+      },
+      {
+        name: "Jinja Nile Resort",
+        address: "Jinja",
+        rating: "4.3",
+        priceLevel: "2",
+        phone: "+256755678901",
+        website: "https://nileresort.com",
+        image: "https://source.unsplash.com/400x300/?river-resort"
+      },
+      {
+        name: "The Pearl of Africa Hotel",
+        address: "Entebbe",
+        rating: "4.4",
+        priceLevel: "3",
+        phone: "+256756789012",
+        website: "https://pearlofafricahotel.com",
+        image: "https://source.unsplash.com/400x300/?modern-hotel"
+      }
+    ];
 
-      const container = document.getElementById("hotel-list");
-      hotels.forEach(hotel => {
-        if (!hotel.name) return;
-        container.innerHTML += `
-          <div class="hotel-card">
-            <img src="${hotel.image}" alt="${hotel.name}" />
-            <div class="hotel-info">
-              <h3>${hotel.name}</h3>
-              <p>📍 ${hotel.address}</p>
-              <p>⭐ ${hotel.rating || 'No rating'} | 💰 ${hotel.priceLevel || 'N/A'}</p>
-            </div>
-            <div class="buttons">
-              <a href="${hotel.website}" target="_blank">View More</a>
-              <a href="mailto:kwemboi59@gmail.com?subject=Booking%20Inquiry%20for%20${encodeURIComponent(hotel.name)}">Book</a>
-            </div>
+    const container = document.getElementById("hotel-list");
+
+    hotels.forEach(hotel => {
+      container.innerHTML += `
+        <div class="hotel-card">
+          <img src="${hotel.image}" alt="${hotel.name}" />
+          <div class="hotel-info">
+            <h3>${hotel.name}</h3>
+            <p>📍 ${hotel.address}</p>
+            <p>⭐ ${hotel.rating} | 💰 ${hotel.priceLevel}</p>
           </div>
-        `;
-      });
-    }
-
-    loadCSV();
+          <div class="buttons">
+            <a href="${hotel.website}" target="_blank">View More</a>
+            <a href="mailto:kwemboi59@gmail.com?subject=Booking%20Inquiry%20for%20${encodeURIComponent(hotel.name)}">Book</a>
+          </div>
+        </div>
+      `;
+    });
   </script>
 </body>
 </html>
